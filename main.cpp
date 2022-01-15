@@ -51,14 +51,13 @@ int main()
 
     Mandelbrot mandelbrot;
 
-    Dragon dragon(20);
+    float* vertices = mandelbrot.ConvertVertices();
 
-    float* vertices = dragon.ConvertVertices();
-
-    unsigned int* indices = dragon.ConvertIndices();
+    unsigned int* indices = mandelbrot.ConvertIndices();
 
     VertexArray va;   
-    VertexBuffer vb(vertices, dragon.GetNumIndices() * 2 * sizeof(float));
+    VertexBuffer vb(vertices, 6 * 2 * sizeof(float));
+    IndexBuffer ib(indices, 6);
 
     VertexBufferLayout layout;
     layout.Push<float>(2);
@@ -67,37 +66,27 @@ int main()
 
 
 
-    Shader activeShader = Shader("./dragon.vert", "./dragon.frag");
+    Shader activeShader = Shader("./mandelbrot.vert", "./mandelbrot.frag");
     
     Renderer renderer;
 
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
-        //std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
-        //std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
+        std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
+        std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
 
-        //activeShader.SetFloatUniform("WindowSize", screenSize);
-        //activeShader.SetFloatUniform("Controls", controls);
+        activeShader.SetFloatUniform("WindowSize", screenSize);
+        activeShader.SetFloatUniform("Controls", controls);
 
         va.Bind();
         activeShader.Bind();
+        ib.Bind();
 
 
         renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
-       /* renderer.Draw(va, ib, activeShader, GL_LINE_STRIP);*/
-        
-        glDrawArrays(GL_LINE_STRIP, 0, dragon.GetNumIndices());
-        //double currentTime = glfwGetTime();
-        //frameCount++;
-
-        //if (currentTime - previousTime >= 1.0f) {
-        //    displayFps(frameCount);
-
-        //    frameCount = 0;
-        //    previousTime = currentTime;
-        //}
+        renderer.Draw(va, ib, activeShader, GL_TRIANGLES);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
