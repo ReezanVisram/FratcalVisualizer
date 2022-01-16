@@ -49,60 +49,72 @@ int main()
         return -1;
     }
 
-    Mandelbrot mandelbrot;
+    Mandelbrot* mandelbrot = new Mandelbrot();
+    Dragon* dragon = new Dragon(20);
 
-    Dragon dragon(20);
+    Fractal* fractals[] = {
+        mandelbrot,
+        dragon
+    };
 
-    float* vertices = dragon.ConvertVertices();
+    Fractal* activeFractal;
+    int activeIndex;
+    std::cout << "Enter which Fractal you would like to draw (0 for the Mandelbrot set, 1 for the Heighway Dragon): ";
+    std::cin >> activeIndex;
+    activeFractal = fractals[activeIndex];
+   
+    float* vertices = activeFractal->ConvertVertices();
 
-    unsigned int* indices = dragon.ConvertIndices();
+    unsigned int* indices = activeFractal->ConvertIndices();
 
     VertexArray va;   
-    VertexBuffer vb(vertices, dragon.GetNumIndices() * 2 * sizeof(float));
+    VertexBuffer vb(vertices, activeFractal->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer ib(indices, activeFractal->GetNumIndices());
 
     VertexBufferLayout layout;
     layout.Push<float>(2);
 
     va.AddBuffer(vb, layout);
 
-
-
-    Shader activeShader = Shader("./dragon.vert", "./dragon.frag");
+    Shader activeShader = Shader(activeFractal->GetVertexPath(), activeFractal->GetFragmentPath());
     
     Renderer renderer;
 
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
-        //std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
-        //std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
+        std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
+        std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
 
-        //activeShader.SetFloatUniform("WindowSize", screenSize);
-        //activeShader.SetFloatUniform("Controls", controls);
+        activeShader.SetFloatUniform("WindowSize", screenSize);
+        activeShader.SetFloatUniform("Controls", controls);
 
         va.Bind();
         activeShader.Bind();
+        ib.Bind();
 
 
         renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
-       /* renderer.Draw(va, ib, activeShader, GL_LINE_STRIP);*/
-        
-        glDrawArrays(GL_LINE_STRIP, 0, dragon.GetNumIndices());
-        //double currentTime = glfwGetTime();
-        //frameCount++;
 
-        //if (currentTime - previousTime >= 1.0f) {
-        //    displayFps(frameCount);
+        if (activeFractal->GetDrawType() == 0) {
+            renderer.DrawElements(va, ib, activeShader, activeFractal->GetEnumType());
+        }
+        else if (activeFractal->GetDrawType() == 1) {
+            renderer.DrawArrays(va, activeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
+        }
 
-        //    frameCount = 0;
-        //    previousTime = currentTime;
-        //}
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+
+    delete mandelbrot;
+    delete dragon;
+    mandelbrot = nullptr;
+    dragon = nullptr;
     glfwTerminate();
     return 0;
 }

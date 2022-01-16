@@ -2,10 +2,14 @@
 
 Mandelbrot::Mandelbrot() {
 	m_name = "mandelbrot";
-	enumType = GL_TRIANGLES;
+	m_enumType = GL_TRIANGLES;
+	m_drawType = 0;
 
-	m_vertices = { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f, 1.0f };
+	m_vertices = { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f };
 	m_indices = { 0, 1, 2, 2, 3, 0 };
+
+	m_vertexPath = "./mandelbrot.vert";
+	m_fragmentPath = "./mandelbrot.frag";
 }
 
 float* Mandelbrot::ConvertVertices() {
