@@ -49,24 +49,34 @@ int main()
         return -1;
     }
 
-    Mandelbrot mandelbrot;
+    Mandelbrot* mandelbrot = new Mandelbrot();
+    Dragon* dragon = new Dragon(20);
 
-    float* vertices = mandelbrot.ConvertVertices();
+    Fractal* fractals[] = {
+        mandelbrot,
+        dragon
+    };
 
-    unsigned int* indices = mandelbrot.ConvertIndices();
+    Fractal* activeFractal;
+    int activeIndex;
+    std::cout << "Enter which Fractal you would like to draw (0 for the Mandelbrot set, 1 for the Heighway Dragon): ";
+    std::cin >> activeIndex;
+    activeFractal = fractals[activeIndex];
+   
+    float* vertices = activeFractal->ConvertVertices();
+
+    unsigned int* indices = activeFractal->ConvertIndices();
 
     VertexArray va;   
-    VertexBuffer vb(vertices, 6 * 2 * sizeof(float));
-    IndexBuffer ib(indices, 6);
+    VertexBuffer vb(vertices, activeFractal->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer ib(indices, activeFractal->GetNumIndices());
 
     VertexBufferLayout layout;
     layout.Push<float>(2);
 
     va.AddBuffer(vb, layout);
 
-
-
-    Shader activeShader = Shader("./mandelbrot.vert", "./mandelbrot.frag");
+    Shader activeShader = Shader(activeFractal->GetVertexPath(), activeFractal->GetFragmentPath());
     
     Renderer renderer;
 
@@ -86,12 +96,25 @@ int main()
 
         renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
-        renderer.Draw(va, ib, activeShader, GL_TRIANGLES);
+
+        if (activeFractal->GetDrawType() == 0) {
+            renderer.DrawElements(va, ib, activeShader, activeFractal->GetEnumType());
+        }
+        else if (activeFractal->GetDrawType() == 1) {
+            renderer.DrawArrays(va, activeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
+        }
+
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+
+    delete mandelbrot;
+    delete dragon;
+    mandelbrot = nullptr;
+    dragon = nullptr;
     glfwTerminate();
     return 0;
 }

@@ -23,8 +23,11 @@ struct Heading {
 };
 
 Dragon::Dragon(unsigned int generations) : m_generations(generations) {
-	enumType = GL_LINE;
+	m_enumType = GL_LINE_STRIP;
 	GenerateVertices();
+	m_vertexPath = "./dragon.vert";
+	m_fragmentPath = "./dragon.frag";
+	m_drawType = 1;
 }
 
 void Dragon::GenerateLSystem() {
@@ -91,8 +94,6 @@ void Dragon::GenerateVertices() {
 		else {
 			heading.decrement();
 		}
-
-		//std::cout << "(" << currX << ", " << currY << ")" << std::endl;
 	}
 
 }
@@ -107,7 +108,25 @@ float* Dragon::ConvertVertices() {
 	return arr;
 }
 
-unsigned int Dragon::GetNumIndices() {
+
+void Dragon::GenerateIndices() {
+	for (int i = 0; i < m_vertices.size() / 2; i++) {
+		m_indices.push_back(i);
+	}
+}
+
+unsigned int* Dragon::ConvertIndices() {
+	GenerateIndices();
+	unsigned int* arr = new unsigned int[m_indices.size()];
+
+	for (int i = 0; i < m_indices.size(); i++) {
+		arr[i] = m_indices.at(i);
+	}
+
+	return arr;
+}
+
+unsigned int Dragon::GetNumIndices() const {
 	return (m_vertices.size() / 2);
 }
 

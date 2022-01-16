@@ -8,13 +8,15 @@ public:
 	Dragon(unsigned int generations);
 
 	float* ConvertVertices() override;
-	unsigned int GetNumIndices();
+	unsigned int* ConvertIndices() override;
+	unsigned int GetNumIndices() const override;
 
 	void SetGenerations(unsigned int generations);
 
 private:
 	void GenerateLSystem();
 	void GenerateVertices();
+	void GenerateIndices();
 
 	std::string SwapCharacters(std::string stringToSwap);
 
