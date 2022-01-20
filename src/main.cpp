@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>]
 
 #include <iostream>
 #include <vector>
@@ -50,7 +50,7 @@ int main()
     }
 
     Mandelbrot* mandelbrot = new Mandelbrot();
-    Dragon* dragon = new Dragon(20);
+    Dragon* dragon = new Dragon(20, 0);
 
     Fractal* fractals[] = {
         mandelbrot,
@@ -58,9 +58,7 @@ int main()
     };
 
     Fractal* activeFractal;
-    int activeIndex;
-    std::cout << "Enter which Fractal you would like to draw (0 for the Mandelbrot set, 1 for the Heighway Dragon): ";
-    std::cin >> activeIndex;
+    int activeIndex = 1;
     activeFractal = fractals[activeIndex];
    
     float* vertices = activeFractal->ConvertVertices();
@@ -80,6 +78,8 @@ int main()
     
     Renderer renderer;
 
+    std::vector<float> color = { 0.0f, 0.0f, 1.0f, 1.0f };
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -88,6 +88,7 @@ int main()
 
         activeShader.SetFloatUniform("WindowSize", screenSize);
         activeShader.SetFloatUniform("Controls", controls);
+        activeShader.SetFloatUniform("Color", color);
 
         va.Bind();
         activeShader.Bind();
@@ -103,8 +104,6 @@ int main()
         else if (activeFractal->GetDrawType() == 1) {
             renderer.DrawArrays(va, activeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
-
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();

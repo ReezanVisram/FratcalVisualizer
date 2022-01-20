@@ -18,69 +18,69 @@
     <ClCompile Include="..\..\Libraries\OpenGL\glad.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="src\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
+    <ClCompile Include="src\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
+    <ClCompile Include="src\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VertexArray.cpp">
+    <ClCompile Include="src\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
+    <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Fractal.cpp">
+    <ClCompile Include="src\Fractal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mandelbrot.cpp">
+    <ClCompile Include="src\Mandelbrot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dragon.cpp">
+    <ClCompile Include="src\Dragon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="src\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
+    <ClInclude Include="src\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
+    <ClInclude Include="src\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VertexArray.h">
+    <ClInclude Include="src\VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VertexBufferLayout.h">
+    <ClInclude Include="src\VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="src\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Fractal.h">
+    <ClInclude Include="src\Fractal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mandelbrot.h">
+    <ClInclude Include="src\Mandelbrot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dragon.h">
+    <ClInclude Include="src\Dragon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.frag" />
-    <None Include="test.vert" />
-    <None Include="mandelbrot.vert" />
-    <None Include="mandelbrot.frag" />
-    <None Include="dragon.vert" />
-    <None Include="dragon.frag" />
+    <None Include="res\shaders\mandelbrot\mandelbrot.vert" />
+    <None Include="res\shaders\mandelbrot\mandelbrot.frag" />
+    <None Include="res\shaders\dragon\dragon.vert" />
+    <None Include="res\shaders\dragon\dragon.frag" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

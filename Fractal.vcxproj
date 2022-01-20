@@ -143,34 +143,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\OpenGL\glad.c" />
-    <ClCompile Include="Dragon.cpp" />
-    <ClCompile Include="Fractal.cpp" />
-    <ClCompile Include="IndexBuffer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mandelbrot.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="VertexArray.cpp" />
-    <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="src\Dragon.cpp" />
+    <ClCompile Include="src\Fractal.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mandelbrot.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dragon.h" />
-    <ClInclude Include="Fractal.h" />
-    <ClInclude Include="IndexBuffer.h" />
-    <ClInclude Include="Mandelbrot.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="VertexArray.h" />
-    <ClInclude Include="VertexBuffer.h" />
-    <ClInclude Include="VertexBufferLayout.h" />
+    <ClInclude Include="src\Dragon.h" />
+    <ClInclude Include="src\Fractal.h" />
+    <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Mandelbrot.h" />
+    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\VertexArray.h" />
+    <ClInclude Include="src\VertexBuffer.h" />
+    <ClInclude Include="src\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dragon.frag" />
-    <None Include="dragon.vert" />
-    <None Include="mandelbrot.frag" />
-    <None Include="mandelbrot.vert" />
-    <None Include="test.frag" />
-    <None Include="test.vert" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="res\shaders\dragon\dragon.frag" />
+    <None Include="res\shaders\dragon\dragon.vert" />
+    <None Include="res\shaders\mandelbrot\mandelbrot.frag" />
+    <None Include="res\shaders\mandelbrot\mandelbrot.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

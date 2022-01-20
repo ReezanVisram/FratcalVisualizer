@@ -3,7 +3,8 @@
 #include <vector>
 
 struct Heading {
-	unsigned short heading = 0;
+	unsigned short heading;
+	Heading(unsigned short initial) : heading(initial) {}
 
 	void increment() {
 		if (heading == 3) {
@@ -22,11 +23,11 @@ struct Heading {
 	}
 };
 
-Dragon::Dragon(unsigned int generations) : m_generations(generations) {
+Dragon::Dragon(unsigned int generations, unsigned short initialHeading) : m_generations(generations), m_heading(initialHeading) {
 	m_enumType = GL_LINE_STRIP;
 	GenerateVertices();
-	m_vertexPath = "./dragon.vert";
-	m_fragmentPath = "./dragon.frag";
+	m_vertexPath = "./res/shaders/dragon/dragon.vert";
+	m_fragmentPath = "./res/shaders/dragon/dragon.frag";
 	m_drawType = 1;
 }
 
@@ -67,7 +68,7 @@ void Dragon::GenerateVertices() {
 	float currX = 0.0f;
 	float currY = 0.0f;
 
-	Heading heading;
+	Heading heading(m_heading);
 
 	for (int i = 0; i < m_lSystem.size(); i++) {
 		m_vertices.push_back(currX);
@@ -130,7 +131,8 @@ unsigned int Dragon::GetNumIndices() const {
 	return (m_vertices.size() / 2);
 }
 
-void Dragon::SetGenerations(unsigned int generations) {
+void Dragon::SetGenerations(unsigned int generations, unsigned short heading) {
 	m_generations = generations;
+	m_heading = heading;
 	GenerateVertices();
 }

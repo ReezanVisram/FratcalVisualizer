@@ -8,8 +8,8 @@ Mandelbrot::Mandelbrot() {
 	m_vertices = { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f };
 	m_indices = { 0, 1, 2, 2, 3, 0 };
 
-	m_vertexPath = "./mandelbrot.vert";
-	m_fragmentPath = "./mandelbrot.frag";
+	m_vertexPath = "./res/shaders/mandelbrot/mandelbrot.vert";
+	m_fragmentPath = "./res/shaders/mandelbrot/mandelbrot.frag";
 }
 
 float* Mandelbrot::ConvertVertices() {
