@@ -1,5 +1,10 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>]
+#include <GLFW/glfw3.h>
+
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
 #include <vector>
@@ -48,6 +53,14 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+
+    ImGui::StyleColorsDark();
+
 
     Mandelbrot* mandelbrot = new Mandelbrot();
     Dragon* dragon = new Dragon(20, 0);
@@ -98,12 +111,24 @@ int main()
         renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
 
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         if (activeFractal->GetDrawType() == 0) {
             renderer.DrawElements(va, ib, activeShader, activeFractal->GetEnumType());
         }
         else if (activeFractal->GetDrawType() == 1) {
             renderer.DrawArrays(va, activeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
+
+        ImGui::Begin("Demo Window");
+        ImGui::Button("Hello!");
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();

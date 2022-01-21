@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Reezan\Documents\Personal\Libraries\OpenGL\includes;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Reezan\Documents\Personal\Libraries\OpenGL\includes;C:\Users\Reezan\Documents\Personal\Libraries\imgui;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Reezan\Documents\Personal\Libraries\OpenGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>src/vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +151,13 @@
     <ClCompile Include="src\Mandelbrot.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
@@ -160,6 +168,15 @@
     <ClInclude Include="src\Mandelbrot.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\vendor\imgui\imconfig.h" />
+    <ClInclude Include="src\vendor\imgui\imgui.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\VertexBufferLayout.h" />
