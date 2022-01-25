@@ -184,6 +184,7 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="imgui.ini" />
     <None Include="res\shaders\dragon\dragon.frag" />
     <None Include="res\shaders\dragon\dragon.vert" />
     <None Include="res\shaders\mandelbrot\mandelbrot.frag" />

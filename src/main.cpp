@@ -23,6 +23,12 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void displayFps(int frameCount);
 
+void BindVertexArray(VertexArray va);
+
+VertexBuffer createVertexBuffer(Fractal* fractal);
+IndexBuffer createIndexBuffer(Fractal* fractal);
+Shader createActiveShader(Fractal* fractal);
+
 unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
@@ -63,50 +69,61 @@ int main()
 
 
     Mandelbrot* mandelbrot = new Mandelbrot();
-    Dragon* dragon = new Dragon(20, 0);
+    float generations = 20;
+    float prevGenerations = generations;
+    Dragon* dragon = new Dragon(static_cast<unsigned int>(generations), 0);
 
     Fractal* fractals[] = {
         mandelbrot,
         dragon
     };
 
-    Fractal* activeFractal;
+    const char* fractalNames[] = {
+        "Mandelbrot Set",
+        "Heighway Dragon"
+    };
+
     int activeIndex = 1;
-    activeFractal = fractals[activeIndex];
-   
-    float* vertices = activeFractal->ConvertVertices();
+    Fractal* activeFractal = fractals[activeIndex];
+    int prevActiveIndex = activeIndex;
 
-    unsigned int* indices = activeFractal->ConvertIndices();
 
-    VertexArray va;   
-    VertexBuffer vb(vertices, activeFractal->GetNumIndices() * 2 * sizeof(float));
-    IndexBuffer ib(indices, activeFractal->GetNumIndices());
-
-    VertexBufferLayout layout;
-    layout.Push<float>(2);
-
-    va.AddBuffer(vb, layout);
-
-    Shader activeShader = Shader(activeFractal->GetVertexPath(), activeFractal->GetFragmentPath());
+    float* mandelbrotVertices = mandelbrot->ConvertVertices();
+    unsigned int* mandelbrotIndices = mandelbrot->ConvertIndices();
+    VertexArray mandelbrotVertexArray;   
+    VertexBuffer mandelbrotVertexBuffer(mandelbrotVertices, mandelbrot->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer mandelbrotIndexBuffer(mandelbrotIndices, mandelbrot->GetNumIndices());
+    VertexBufferLayout mandelbrotLayout;
+    mandelbrotLayout.Push<float>(2);
+    mandelbrotVertexArray.AddBuffer(mandelbrotVertexBuffer, mandelbrotLayout);
+    Shader mandelbrotShader = Shader(mandelbrot->GetVertexPath(), mandelbrot->GetFragmentPath());
     
+    float* dragonVertices = dragon->ConvertVertices();
+    unsigned int* dragonIndices = dragon->ConvertIndices();
+    VertexArray dragonVertexArray;
+    VertexBuffer dragonVertexBuffer(dragonVertices, dragon->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer dragonIndexBuffer(dragonIndices, dragon->GetNumIndices());
+    VertexBufferLayout dragonLayout;
+    dragonLayout.Push<float>(2);
+    dragonVertexArray.AddBuffer(dragonVertexBuffer, dragonLayout);
+    Shader dragonShader = Shader(dragon->GetVertexPath(), dragon->GetFragmentPath());
+
+
     Renderer renderer;
 
     std::vector<float> color = { 0.0f, 0.0f, 1.0f, 1.0f };
 
     while (!glfwWindowShouldClose(window))
     {
+        prevActiveIndex = activeIndex;
+        prevGenerations = generations;
         processInput(window);
         std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
         std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
 
-        activeShader.SetFloatUniform("WindowSize", screenSize);
-        activeShader.SetFloatUniform("Controls", controls);
-        activeShader.SetFloatUniform("Color", color);
-
-        va.Bind();
-        activeShader.Bind();
-        ib.Bind();
-
+        mandelbrotShader.SetFloatUniform("WindowSize", screenSize);
+        mandelbrotShader.SetFloatUniform("Controls", controls);
+        dragonShader.SetFloatUniform("Color", color);
 
         renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
@@ -117,15 +134,30 @@ int main()
         ImGui::NewFrame();
 
         if (activeFractal->GetDrawType() == 0) {
-            renderer.DrawElements(va, ib, activeShader, activeFractal->GetEnumType());
+            mandelbrotVertexArray.Bind();
+            mandelbrotShader.Bind();
+            mandelbrotIndexBuffer.Bind();
+            renderer.DrawElements(mandelbrotVertexArray, mandelbrotIndexBuffer, mandelbrotShader, activeFractal->GetEnumType());
         }
         else if (activeFractal->GetDrawType() == 1) {
-            renderer.DrawArrays(va, activeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
+            ImGui::SliderFloat("Generations", &generations, 0.0f, 25.0f);
+            ImGui::Button("Draw");
+            dragonVertexArray.Bind();
+            dragonShader.Bind();
+            dragonIndexBuffer.Bind();
+            renderer.DrawArrays(dragonVertexArray, dragonShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
 
-        ImGui::Begin("Demo Window");
-        ImGui::Button("Hello!");
+        ImGui::Begin("Fractal");
+        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 2);
+        ImGui::Button("Draw");
+
         ImGui::End();
+
+        if (activeIndex != prevActiveIndex) {
+            activeFractal = fractals[activeIndex];
+        }
+
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -141,6 +173,23 @@ int main()
     dragon = nullptr;
     glfwTerminate();
     return 0;
+}
+
+VertexBuffer createVertexBuffer(Fractal* fractal) {
+    float* vertices = fractal->ConvertVertices();
+    VertexBuffer vb(vertices, fractal->GetNumIndices() * 2 * sizeof(float));
+    return vb;
+}
+
+IndexBuffer createIndexBuffer(Fractal* fractal) {
+    unsigned int* indices = fractal->ConvertIndices();
+    IndexBuffer ib(indices, fractal->GetNumIndices());
+    return ib;
+}
+
+Shader createActiveShader(Fractal* fractal) {
+    Shader shader(fractal->GetVertexPath(), fractal->GetFragmentPath());
+    return shader;
 }
 
 void displayFps(int frameCount) {

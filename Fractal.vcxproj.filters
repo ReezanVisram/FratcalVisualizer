@@ -130,5 +130,6 @@
     <None Include="res\shaders\dragon\dragon.frag" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="imgui.ini" />
   </ItemGroup>
 </Project>
