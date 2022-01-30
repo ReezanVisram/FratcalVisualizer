@@ -17,6 +17,7 @@
 #include "Fractal.h"
 #include "Mandelbrot.h"
 #include "Dragon.h"
+#include "Snowflake.h"
 #include "Renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -73,18 +74,22 @@ int main()
     float prevGenerations = generations;
     Dragon* dragon = new Dragon(static_cast<unsigned int>(generations), 0);
 
+    Snowflake* snowflake = new Snowflake(5);
+
     Fractal* fractals[] = {
         mandelbrot,
-        dragon
+        dragon,
+        snowflake
     };
 
     const char* fractalNames[] = {
         "Mandelbrot Set",
-        "Heighway Dragon"
+        "Heighway Dragon",
+        "Snowflake"
     };
 
-    int activeIndex = 1;
-    Fractal* activeFractal = fractals[activeIndex];
+    int activeIndex = 2;
+    Fractal* activeFractal = fractals[2];
     int prevActiveIndex = activeIndex;
 
 
@@ -108,6 +113,16 @@ int main()
     dragonVertexArray.AddBuffer(dragonVertexBuffer, dragonLayout);
     Shader dragonShader = Shader(dragon->GetVertexPath(), dragon->GetFragmentPath());
 
+    float* snowflakeVertices = snowflake->ConvertVertices();
+    unsigned int* snowflakeIndices = snowflake->ConvertIndices();
+    VertexArray snowflakeVertexArray;
+    VertexBuffer snowflakeVertexBuffer(snowflakeVertices, snowflake->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer snowflakeIndexBuffer(snowflakeIndices, snowflake->GetNumIndices());
+    VertexBufferLayout snowflakeLayout;
+    snowflakeLayout.Push<float>(2);
+    snowflakeVertexArray.AddBuffer(snowflakeVertexBuffer, snowflakeLayout);
+    Shader snowflakeShader = Shader(snowflake->GetVertexPath(), snowflake->GetFragmentPath());
+
 
     Renderer renderer;
 
@@ -124,8 +139,9 @@ int main()
         mandelbrotShader.SetFloatUniform("WindowSize", screenSize);
         mandelbrotShader.SetFloatUniform("Controls", controls);
         dragonShader.SetFloatUniform("Color", color);
+        snowflakeShader.SetFloatUniform("Color", color);
 
-        renderer.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        renderer.ClearColor(0.4f, 0.97f, 1.0f, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
 
 
@@ -147,9 +163,15 @@ int main()
             dragonIndexBuffer.Bind();
             renderer.DrawArrays(dragonVertexArray, dragonShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
+        else if (activeFractal->GetDrawType() == 2) {
+            snowflakeVertexArray.Bind();
+            snowflakeShader.Bind();
+            snowflakeIndexBuffer.Bind();
+            renderer.DrawArrays(snowflakeVertexArray, snowflakeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
+        }
 
         ImGui::Begin("Fractal");
-        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 2);
+        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 3);
         ImGui::Button("Draw");
 
         ImGui::End();
