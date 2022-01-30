@@ -1,5 +1,5 @@
 # FratcalVisualizer
-A C++ with OpenGL program that displays customizable and interactive fractals.
+A C++ with OpenGL program that displays customizable and interactive fractals. I made this project to learn the basics of graphics programming (buffers, layouts, shaders), and to have a comprehensive set of two-dimensional fractals. 
 
 ## Current Fractals List
 1. The Mandelbrot Set (with interactive panning and zooming)
@@ -12,4 +12,3 @@ A C++ with OpenGL program that displays customizable and interactive fractals.
 3. Fractal Tree
 4. Cantor Set
 
-I made this project to learn the basics of graphics programming (buffers, layouts, shaders), and to have a comprehensive set of simple fractals, which I find incredibly cool.
