@@ -151,6 +151,7 @@
     <ClCompile Include="src\Mandelbrot.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\SierpinksiTriangle.cpp" />
     <ClCompile Include="src\Snowflake.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\Mandelbrot.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\SierpinskiTriangle.h" />
     <ClInclude Include="src\Snowflake.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
@@ -193,6 +195,8 @@
     <None Include="res\shaders\mandelbrot\mandelbrot.vert" />
     <None Include="res\shaders\snowflake\snowflake.frag" />
     <None Include="res\shaders\snowflake\snowflake.vert" />
+    <None Include="res\shaders\triangle\triangle.frag" />
+    <None Include="res\shaders\triangle\triangle.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -69,6 +69,9 @@
     <ClCompile Include="src\Snowflake.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SierpinksiTriangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -128,6 +131,9 @@
     <ClInclude Include="src\Snowflake.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SierpinskiTriangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\mandelbrot\mandelbrot.vert" />
@@ -139,5 +145,7 @@
     <None Include="imgui.ini" />
     <None Include="res\shaders\snowflake\snowflake.vert" />
     <None Include="res\shaders\snowflake\snowflake.frag" />
+    <None Include="res\shaders\triangle\triangle.vert" />
+    <None Include="res\shaders\triangle\triangle.frag" />
   </ItemGroup>
 </Project>

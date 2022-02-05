@@ -18,6 +18,7 @@
 #include "Mandelbrot.h"
 #include "Dragon.h"
 #include "Snowflake.h"
+#include "SierpinskiTriangle.h"
 #include "Renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -75,21 +76,24 @@ int main()
     Dragon* dragon = new Dragon(static_cast<unsigned int>(generations), 0);
 
     Snowflake* snowflake = new Snowflake(5);
+    SierpinskiTriangle* triangle = new SierpinskiTriangle(10);
 
     Fractal* fractals[] = {
         mandelbrot,
         dragon,
-        snowflake
+        snowflake,
+        triangle
     };
 
     const char* fractalNames[] = {
         "Mandelbrot Set",
         "Heighway Dragon",
-        "Snowflake"
+        "Snowflake",
+        "Sierpinski's Triangle"
     };
 
-    int activeIndex = 2;
-    Fractal* activeFractal = fractals[2];
+    int activeIndex = 3;
+    Fractal* activeFractal = fractals[3];
     int prevActiveIndex = activeIndex;
 
 
@@ -123,6 +127,15 @@ int main()
     snowflakeVertexArray.AddBuffer(snowflakeVertexBuffer, snowflakeLayout);
     Shader snowflakeShader = Shader(snowflake->GetVertexPath(), snowflake->GetFragmentPath());
 
+    float* triangleVertices = triangle->ConvertVertices();
+    unsigned int* triangleIndices = triangle->ConvertIndices();
+    VertexArray triangleVertexArray;
+    VertexBuffer triangleVertexBuffer(triangleVertices, triangle->GetNumIndices() * 2 * sizeof(float));
+    IndexBuffer triangleIndexBuffer(triangleIndices, triangle->GetNumIndices());
+    VertexBufferLayout triangleLayout;
+    triangleLayout.Push<float>(2);
+    triangleVertexArray.AddBuffer(triangleVertexBuffer, triangleLayout);
+    Shader triangleShader = Shader(triangle->GetVertexPath(), triangle->GetFragmentPath());
 
     Renderer renderer;
 
@@ -169,9 +182,15 @@ int main()
             snowflakeIndexBuffer.Bind();
             renderer.DrawArrays(snowflakeVertexArray, snowflakeShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
+        else if (activeFractal->GetDrawType() == 3) {
+            triangleVertexArray.Bind();
+            triangleShader.Bind();
+            triangleIndexBuffer.Bind();
+            renderer.DrawArrays(triangleVertexArray, triangleShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
+        }
 
         ImGui::Begin("Fractal");
-        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 3);
+        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 4);
         ImGui::Button("Draw");
 
         ImGui::End();
