@@ -5,10 +5,8 @@ A C++ with OpenGL program that displays customizable and interactive fractals. I
 1. The Mandelbrot Set (with interactive panning and zooming)
 2. The Heighway Dragon Curve
 3. Koch's Snowflake
+4. Sierpinski's Triangle
 
 ## Future Fractals List
-1. Sierpinski Triangle
-2. Sierpinski Carpet
-3. Fractal Tree
-4. Cantor Set
+1. Cantor Set
 
