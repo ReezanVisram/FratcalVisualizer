@@ -10,6 +10,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <map>
 #include "Shader.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -24,6 +25,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void displayFps(int frameCount);
+void updateActiveFractal(Fractal **activeFractal, const char* newFractal, const std::map<const char*, Fractal*> map);
 
 void BindVertexArray(VertexArray va);
 
@@ -78,22 +80,17 @@ int main()
     Snowflake* snowflake = new Snowflake(5);
     SierpinskiTriangle* triangle = new SierpinskiTriangle(10);
 
-    Fractal* fractals[] = {
-        mandelbrot,
-        dragon,
-        snowflake,
-        triangle
+    std::map<const char*, Fractal*> fractals = {
+        {"Mandelbrot Set", mandelbrot},
+        {"Heighway Dragon", dragon},
+        {"Koch's Snowflake", snowflake},
+        {"Sierpinski's Triangle", triangle}
     };
 
-    const char* fractalNames[] = {
-        "Mandelbrot Set",
-        "Heighway Dragon",
-        "Snowflake",
-        "Sierpinski's Triangle"
-    };
+    std::map<const char*, Fractal*>::iterator fractalsItr;
 
     int activeIndex = 3;
-    Fractal* activeFractal = fractals[3];
+    Fractal* activeFractal = fractals.at("Mandelbrot Set");
     int prevActiveIndex = activeIndex;
 
 
@@ -139,7 +136,13 @@ int main()
 
     Renderer renderer;
 
-    std::vector<float> color = { 0.0f, 0.0f, 1.0f, 1.0f };
+    float backgroundRed = 0.0f;
+    float backgroundGreen = 0.0f;
+    float backgroundBlue = 0.0f;
+
+    float fractalRed = 1.0f;
+    float fractalGreen = 1.0f;
+    float fractalBlue = 1.0f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -149,12 +152,14 @@ int main()
         std::vector<float> screenSize = { float(SCR_WIDTH), float(SCR_HEIGHT) };
         std::vector<float> controls = { CENTER_X, CENTER_Y, ZOOM };
 
+        std::vector<float> color = { fractalRed, fractalGreen, fractalBlue, 1.0f };
+
         mandelbrotShader.SetFloatUniform("WindowSize", screenSize);
         mandelbrotShader.SetFloatUniform("Controls", controls);
         dragonShader.SetFloatUniform("Color", color);
         snowflakeShader.SetFloatUniform("Color", color);
 
-        renderer.ClearColor(0.4f, 0.97f, 1.0f, 1.0f);
+        renderer.ClearColor(backgroundRed, backgroundGreen, backgroundBlue, 1.0f);
         renderer.ClearBit(GL_COLOR_BUFFER_BIT);
 
 
@@ -169,8 +174,6 @@ int main()
             renderer.DrawElements(mandelbrotVertexArray, mandelbrotIndexBuffer, mandelbrotShader, activeFractal->GetEnumType());
         }
         else if (activeFractal->GetDrawType() == 1) {
-            ImGui::SliderFloat("Generations", &generations, 0.0f, 25.0f);
-            ImGui::Button("Draw");
             dragonVertexArray.Bind();
             dragonShader.Bind();
             dragonIndexBuffer.Bind();
@@ -189,16 +192,58 @@ int main()
             renderer.DrawArrays(triangleVertexArray, triangleShader, activeFractal->GetEnumType(), 0, activeFractal->GetNumIndices());
         }
 
-        ImGui::Begin("Fractal");
-        ImGui::ListBox("Active Fractal", &activeIndex, fractalNames, 4);
-        ImGui::Button("Draw");
+        if (ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("Fractals")) {
+                for (fractalsItr = fractals.begin(); fractalsItr != fractals.end(); ++fractalsItr) {
+                    if (ImGui::MenuItem(fractalsItr->first)) {
+                        updateActiveFractal(&activeFractal, fractalsItr->first, fractals);
+                    }
+                }
 
-        ImGui::End();
+                ImGui::EndMenu();
+            }
 
-        if (activeIndex != prevActiveIndex) {
-            activeFractal = fractals[activeIndex];
+            if (ImGui::BeginMenu("Colors")) {
+                if (ImGui::MenuItem("*Note that changing colours does not affect the Mandelbrot Set as its colours are based on mangification level!*")) {}
+                if (ImGui::BeginMenu("Background Colour")) {
+                    ImGui::SliderFloat("Red", &backgroundRed, 0.0f, 1.0f);
+                    ImGui::SliderFloat("Green", &backgroundGreen, 0.0f, 1.0f);
+                    ImGui::SliderFloat("Blue", &backgroundBlue, 0.0f, 1.0f);
+                    ImGui::EndMenu();
+                }
+                if (ImGui::BeginMenu("Fractal Colour")) {
+                    ImGui::SliderFloat("Red", &fractalRed, 0.0f, 1.0f);
+                    ImGui::SliderFloat("Green", &fractalGreen, 0.0f, 1.0f);
+                    ImGui::SliderFloat("Blue", &fractalBlue, 0.0f, 1.0f);
+                    ImGui::EndMenu();
+                }
+
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("About")) {
+                if (ImGui::BeginMenu("Instructions")) {
+                    if (ImGui::BeginMenu("Mandelbrot Set")) {
+                        ImGui::Text("Pan around using your arrow keys!\nZoom in with Left CTRL and zoom out with Left SHIFT\nNote that changing colours does not work for the Mandelbrot Set as its colours are determined based on magnification level");
+                        ImGui::EndMenu();
+                    }
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("Development Information")) {
+                    ImGui::Text("FractalVisualizer was made by Reezan Visram as a project to explore OpenGL and chaos mathematics.\nPlease check out my website at reezanvisram.com for more projects!");
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("More Fractals?")) {
+                    ImGui::Text("More fractals and more customization options (such as changing the number of Mandelbrot Set iterations or drawing multiple fractals on top of one another)\n are coming! Stay tuned");
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMainMenuBar();
         }
-
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -290,6 +335,10 @@ void processInput(GLFWwindow* window)
             ZOOM = 0.0000001f;
         }
     }
+}
+
+void updateActiveFractal(Fractal **activeFractal, const char* newFractal, const std::map<const char*, Fractal*> map) {
+    *activeFractal = map.at(newFractal);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
